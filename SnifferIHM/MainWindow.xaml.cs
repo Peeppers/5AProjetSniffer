@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Windows.Markup;
+using System.Collections.ObjectModel;
+using System.Windows.Media.TextFormatting;
 
 namespace SnifferIHM
 {
@@ -16,11 +18,17 @@ namespace SnifferIHM
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static int packetIndex = 0;
+        ObservableCollection<Trame> packets = new ObservableCollection<Trame>();
+        CaptureDeviceList devices = CaptureDeviceList.Instance;
+        ICaptureDevice device { get; set; }
+        public bool keepAlive { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             List<string> ListOfItems = new List<string>();
-            
+            device = null;
+            keepAlive= true;
             CaptureDeviceList devices = CaptureDeviceList.Instance;
             ListOfItems.Add("TCP");
             ListOfItems.Add("UDP");
@@ -31,7 +39,7 @@ namespace SnifferIHM
 
         public class Trame
         {
-            public Trame(int id, DateTime time, byte[] data)
+            public Trame(int id, DateTime time, PacketDotNet.Packet data)
             {
                 this.id = id;
                 this.time = time;
@@ -44,7 +52,7 @@ namespace SnifferIHM
             public DateTime time { get; set; }
             //public string sourceIP { get; set; }
             //public string destinationIP { get; set; }
-            public byte[] data { get; set; }
+            public PacketDotNet.Packet data { get; set; }
         }
 
         static List<string> interfaceChoose(CaptureDeviceList devices)
@@ -61,60 +69,61 @@ namespace SnifferIHM
         private void startOnClick(object sender, RoutedEventArgs e)
         {
             MainWindow window = Window.GetWindow(this) as MainWindow;
-            Sniffer(window.interfaceList.SelectedIndex, mainGrid);
+            Sniffer(window.interfaceList.SelectedIndex);
+        }
+        private void stopOnClick(object sender, RoutedEventArgs e)
+        {
+            this.keepAlive= false;
+
         }
 
-        private void Sniffer(int choosenDevice, DataGrid grid)
+        private void Sniffer(int choosenDevice)
         {
-
-            CaptureDeviceList devices = CaptureDeviceList.Instance;
-
             if(devices.Count < 1)
             {
                 MessageBox.Show("Aucune interface sur la machine");
                 return;
             }
             // Extract a device from the list
-            ICaptureDevice device = devices[4];
+            this.device = devices[choosenDevice];
 
             // Register our handler function to the
             // 'packet arrival' event
+            
             device.OnPacketArrival +=
                 new SharpPcap.PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
-            Console.WriteLine(device);
-            Console.WriteLine("-- Listening on {0}, hit 'Enter' to stop...",
-                device.Description);
 
             // Start the capturing process
             device.StartCapture();
-
-            //// Wait for 'Enter' from the user.
-            //Console.ReadLine();
-
-            //// Stop the capturing process
-            //device.StopCapture();
-
-            //// Close the pcap device
-            //device.Close();
         }
 
-        private static int packetIndex = 0;
-        List<Trame> trameList = new List<Trame>();
+        public ObservableCollection<Trame> Packets
+        {
+            get { return packets; }
+        }
         public void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var rawPacket = e.Packet;
-            packetIndex++;
-            Trame trame = new Trame(packetIndex++, rawPacket.Timeval.Date, rawPacket.Data);
-            trameList.Add(trame);
-            //this.Dispatcher.Invoke(new Action(() =>
-            //{
-            //    mainGrid.ItemsSource = trameList;
-            //}));
-            
-        }       
+
+            if (keepAlive)
+            {
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    var rawPacket = e.Packet;
+                    packetIndex++;
+                    Trame trame = new Trame(packetIndex, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
+
+
+                    packets.Add(trame);
+                    mainGrid.ItemsSource = packets;
+                }));
+            }
+            else return;
+           
+
+        }      
     }
 }

@@ -14,16 +14,17 @@
         <ScrollViewer Margin="10,128,10,10">
             <DataGrid Name="mainGrid" HorizontalAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="id" Width="50"/>
-                    <DataGridTextColumn Header="Temps" Width="100"/>
-                    <DataGridTextColumn Header="Source" Width="100"/>
+                    <!--<DataGridTextColumn Binding="{Binding id}" Width="50"/>
+                    <DataGridTextColumn Binding="{Binding time}" Width="100"/>-->
+                    <!--<DataGridTextColumn Header="Source" Width="100"/>
                     <DataGridTextColumn Header="Destination" Width="100"/>
-                    <DataGridTextColumn Header="Protocle" Width="100"/>
-                    <DataGridTextColumn Header="Données" Width="2*"/>
+                    <DataGridTextColumn Header="Protocle" Width="100"/>-->
+                    <!--<DataGridTextColumn Binding="{Binding data}" Width="2*"/>-->
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
         <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
         <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="468,68,0,0" VerticalAlignment="Top"/>
+        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="534,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804"/>
     </Grid>
 </Window>
