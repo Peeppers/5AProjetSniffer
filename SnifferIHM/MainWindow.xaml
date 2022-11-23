@@ -13,14 +13,6 @@
         <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" />
         <ScrollViewer Margin="10,128,10,10">
             <DataGrid Name="mainGrid" HorizontalAlignment="Stretch">
-                <DataGrid.Columns>
-                    <!--<DataGridTextColumn Binding="{Binding id}" Width="50"/>
-                    <DataGridTextColumn Binding="{Binding time}" Width="100"/>-->
-                    <!--<DataGridTextColumn Header="Source" Width="100"/>
-                    <DataGridTextColumn Header="Destination" Width="100"/>
-                    <DataGridTextColumn Header="Protocle" Width="100"/>-->
-                    <!--<DataGridTextColumn Binding="{Binding data}" Width="2*"/>-->
-                </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
         <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>

@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using SharpPcap;
 using PacketDotNet;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows.Controls;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.Windows.Markup;
 using System.Collections.ObjectModel;
-using System.Windows.Media.TextFormatting;
 
 namespace SnifferIHM
 {
@@ -39,19 +33,27 @@ namespace SnifferIHM
 
         public class Trame
         {
-            public Trame(int id, DateTime time, PacketDotNet.Packet data)
+            public Trame(int id, System.Net.IPAddress srcIp, int srcPort, System.Net.IPAddress destIp, int destPort, IPProtocolType protocol, int lenght, DateTime time, PacketDotNet.Packet data)
             {
                 this.id = id;
+                this.sourceIP= srcIp;
+                this.sourcePort = srcPort;
+                this.destinationIP= destIp;
+                this.destinationPort = destPort;
+                this.lenght = lenght;
                 this.time = time;
-                //this.sourceIP = sourceIP;
-                //this.destinationIP = destinationIP;
                 this.data = data;
+                this.protocol= protocol;  
             }
 
             public int id { get; set; }
+            public int lenght { get; set; }
             public DateTime time { get; set; }
-            //public string sourceIP { get; set; }
-            //public string destinationIP { get; set; }
+            public System.Net.IPAddress sourceIP { get; set; }
+            public System.Net.IPAddress destinationIP { get; set; }
+            public IPProtocolType protocol { get; set; }
+            public int sourcePort { get; set; }
+            public int destinationPort { get; set; }
             public PacketDotNet.Packet data { get; set; }
         }
 
@@ -74,7 +76,6 @@ namespace SnifferIHM
         private void stopOnClick(object sender, RoutedEventArgs e)
         {
             this.keepAlive= false;
-
         }
 
         private void Sniffer(int choosenDevice)
@@ -84,14 +85,19 @@ namespace SnifferIHM
                 MessageBox.Show("Aucune interface sur la machine");
                 return;
             }
+            if(choosenDevice == -1)
+            {
+                MessageBox.Show("Aucune interface choisi");
+                return;
+            }
             // Extract a device from the list
             this.device = devices[choosenDevice];
 
             // Register our handler function to the
             // 'packet arrival' event
-            
+
             device.OnPacketArrival +=
-                new SharpPcap.PacketArrivalEventHandler(device_OnPacketArrival);
+                new PacketArrivalEventHandler(device_OnPacketArrival);
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
@@ -99,6 +105,17 @@ namespace SnifferIHM
 
             // Start the capturing process
             device.StartCapture();
+            
+                
+
+            //// Wait for 'Enter' from the user.
+            //Console.ReadLine();
+
+            //// Stop the capturing process
+            //device.StopCapture();
+
+            //// Close the pcap device
+            //device.Close();
         }
 
         public ObservableCollection<Trame> Packets
@@ -107,21 +124,52 @@ namespace SnifferIHM
         }
         public void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-
-            if (keepAlive)
+            if(keepAlive)
             {
                 this.Dispatcher.Invoke(new Action(() =>
                 {
+                    var time = e.Packet.Timeval.Date;
+                    var len = e.Packet.Data.Length;
                     var rawPacket = e.Packet;
-                    packetIndex++;
-                    Trame trame = new Trame(packetIndex, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
 
+                    var packet = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
 
-                    packets.Add(trame);
-                    mainGrid.ItemsSource = packets;
+                    var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
+                    var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
+
+                    if (tcpPacket != null)
+                    {
+                        var ipPacket = (PacketDotNet.IpPacket)tcpPacket.ParentPacket;
+                        System.Net.IPAddress srcIp = ipPacket.SourceAddress;
+                        System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
+                        int srcPort = tcpPacket.SourcePort;
+                        int dstPort = tcpPacket.DestinationPort;
+                        IPProtocolType protocol = ipPacket.Protocol;
+                        packetIndex++;
+
+                        Trame trame = new Trame(packetIndex, srcIp, srcPort, dstIp, dstPort, protocol, len, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
+
+                        packets.Add(trame);
+                        mainGrid.ItemsSource = packets;
+                    }
+                    if (udpPacket != null) 
+                    {
+                        var ipPacket = (PacketDotNet.IpPacket)udpPacket.ParentPacket;
+                        System.Net.IPAddress srcIp = ipPacket.SourceAddress;
+                        System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
+                        int srcPort = udpPacket.SourcePort;
+                        int dstPort = udpPacket.DestinationPort;
+                        IPProtocolType protocol = ipPacket.Protocol;
+                        packetIndex++;
+
+                        Trame trame = new Trame(packetIndex, srcIp, srcPort, dstIp, dstPort, protocol, len, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
+
+                        packets.Add(trame);
+                        mainGrid.ItemsSource = packets;
+                    }
+                   
                 }));
             }
-            else return;
            
 
         }      
