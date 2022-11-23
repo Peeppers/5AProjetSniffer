@@ -1,0 +1,29 @@
+﻿<Window x:Class="SnifferIHM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SnifferIHM"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="617" Width="813">
+    <Grid>
+        <Label Content="Filtre :" HorizontalAlignment="Left" Margin="30,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
+        <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134"/>
+        <ComboBox Name="filterList" HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Width="120" />
+        <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" />
+        <ScrollViewer Margin="10,128,10,10">
+            <DataGrid Name="mainGrid" HorizontalAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="id" Width="50"/>
+                    <DataGridTextColumn Header="Temps" Width="100"/>
+                    <DataGridTextColumn Header="Source" Width="100"/>
+                    <DataGridTextColumn Header="Destination" Width="100"/>
+                    <DataGridTextColumn Header="Protocle" Width="100"/>
+                    <DataGridTextColumn Header="Données" Width="2*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+        <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
+        <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="468,68,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>
