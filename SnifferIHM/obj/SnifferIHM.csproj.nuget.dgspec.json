@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Peepp\\source\\repos\\SnifferIHM\\SnifferIHM\\SnifferIHM.csproj": {}
+    "D:\\cours\\5A\\sniffer\\5AProjetSniffer\\SnifferIHM\\SnifferIHM.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Peepp\\source\\repos\\SnifferIHM\\SnifferIHM\\SnifferIHM.csproj": {
+    "D:\\cours\\5A\\sniffer\\5AProjetSniffer\\SnifferIHM\\SnifferIHM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Peepp\\source\\repos\\SnifferIHM\\SnifferIHM\\SnifferIHM.csproj",
+        "projectUniqueName": "D:\\cours\\5A\\sniffer\\5AProjetSniffer\\SnifferIHM\\SnifferIHM.csproj",
         "projectName": "SnifferIHM",
-        "projectPath": "C:\\Users\\Peepp\\source\\repos\\SnifferIHM\\SnifferIHM\\SnifferIHM.csproj",
-        "packagesPath": "C:\\Users\\Peepp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Peepp\\source\\repos\\SnifferIHM\\SnifferIHM\\obj\\",
+        "projectPath": "D:\\cours\\5A\\sniffer\\5AProjetSniffer\\SnifferIHM\\SnifferIHM.csproj",
+        "packagesPath": "C:\\Users\\alban\\.nuget\\packages\\",
+        "outputPath": "D:\\cours\\5A\\sniffer\\5AProjetSniffer\\SnifferIHM\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Peepp\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\alban\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -60,6 +56,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.1.31, 3.1.31]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"

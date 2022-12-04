@@ -18,5 +18,6 @@
         <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
         <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="468,68,0,0" VerticalAlignment="Top"/>
         <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="534,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804"/>
+		<Button Name="clearButton" Click="clearOnClick" Content="Clear" HorizontalAlignment="Left" Margin="600,68,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
