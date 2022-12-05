@@ -24,10 +24,12 @@ namespace SnifferIHM
             device = null;
             keepAlive= true;
             CaptureDeviceList devices = CaptureDeviceList.Instance;
+            ListOfItems.Add("");
             ListOfItems.Add("TCP");
             ListOfItems.Add("UDP");
             interfaceList.ItemsSource = interfaceChoose(devices);
             filterList.ItemsSource = ListOfItems;
+            filterList.SelectedIndex = 0;
             //Sniffer(mainGrid);
         }
 
@@ -43,7 +45,7 @@ namespace SnifferIHM
                 this.lenght = lenght;
                 this.time = time;
                 this.data = data;
-                this.protocol= protocol;  
+                this.protocol= protocol;
             }
 
             public int id { get; set; }
@@ -71,6 +73,7 @@ namespace SnifferIHM
         private void startOnClick(object sender, RoutedEventArgs e)
         {
             MainWindow window = Window.GetWindow(this) as MainWindow;
+            this.keepAlive = true;
             Sniffer(window.interfaceList.SelectedIndex);
         }
         private void stopOnClick(object sender, RoutedEventArgs e)
@@ -149,7 +152,7 @@ namespace SnifferIHM
 
                         Trame trame = new Trame(packetIndex, srcIp, srcPort, dstIp, dstPort, protocol, len, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
 
-                        packets.Add(trame);
+                        if ((string)filterList.SelectedItem !="UDP") packets.Add(trame);
                         mainGrid.ItemsSource = packets;
                     }
                     if (udpPacket != null) 
@@ -164,7 +167,7 @@ namespace SnifferIHM
 
                         Trame trame = new Trame(packetIndex, srcIp, srcPort, dstIp, dstPort, protocol, len, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
 
-                        packets.Add(trame);
+                        if ((string)filterList.SelectedItem != "TCP") packets.Add(trame);
                         mainGrid.ItemsSource = packets;
                     }
                    
