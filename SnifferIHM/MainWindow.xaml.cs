@@ -14,20 +14,20 @@ namespace SnifferIHM
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window         // Classe principale, communique avec le front XAML et le controlleur
+    public partial class MainWindow : Window                            // Classe principale, communique avec le front XAML et le controlleur
     {
-        private readonly MainViewModel vm;
+        private readonly MainViewModel vm;                              // On initialise le controlleur
         public MainWindow()
         {
             InitializeComponent();
-            vm = new MainViewModel(this.Dispatcher);
-            DataContext = vm;
+            vm = new MainViewModel(this.Dispatcher);                    // On instancie le Controlleur de l'application en le passant le Thread de l'application globale
+            DataContext = vm;                                           // On change le contexte des données sur celui du controlleur pour pouvoir acceder aux données du controlleur depuis le XAML (avec Binding...)
         }
 
         private void startOnClick(object sender, RoutedEventArgs e)
         {
             vm.keepAlive = true;
-            vm.Sniffer(interfaceList.SelectedIndex, filterList.Text);
+            vm.Sniffer(interfaceList.SelectedIndex, filterList.Text);   // on sniff avec en parametre l'interface et filtre selectionné
         }
         private void stopOnClick(object sender, RoutedEventArgs e)
         {
@@ -58,11 +58,12 @@ namespace SnifferIHM
 
     public class MainViewModel
     {
+        // On initialise toutes les variables dont le sniffeur aura besoin
         private static int packetIndex;
         public Dispatcher dispatcher { get; set; }
         CaptureDeviceList devices { get; set; }
-        public ObservableCollection<string> interfaces { get; }
-        public ObservableCollection<string> ListOfItems { get; }
+        public ObservableCollection<string> interfaces { get; } // Variable lié à la liste des interfaces dans le xaml
+        public ObservableCollection<string> ListOfItems { get; }  // Variable lié aux filtres dans le xaml
 
         public Dictionary<int, Packet> packetList;
 
@@ -70,21 +71,22 @@ namespace SnifferIHM
 
         ICaptureDevice device { get; set; }
         public bool keepAlive { get; set; }
-        public ObservableCollection<Trame> Packets
+        public ObservableCollection<Trame> Packets // Variable accessible lie à la liste de paquets dans le xaml 
         {
             get { return packets; }
         }
 
+        // On instancie les valeures par defaut dans le constructeur
         public MainViewModel(Dispatcher dispatcher)
         {
-            packets = new ObservableCollection<Trame>();
-            packetList = new Dictionary<int, Packet>();
-            devices = CaptureDeviceList.Instance;
-            packetIndex = 0;
+            packets = new ObservableCollection<Trame>();    // listes des paquets capturés
+            packetList = new Dictionary<int, Packet>();     
+            devices = CaptureDeviceList.Instance;           // listes des interfaces
+            packetIndex = 0;                                // Index de chaque paquet pour la construction de la trame
             keepAlive = true;
-            this.dispatcher = dispatcher;
+            this.dispatcher = dispatcher;                   // thread principale de l'appli
             device = null;
-            interfaces = interfaceChoose(devices);
+            interfaces = interfaceChoose(devices);          // Liste des interfaces a afficher 
         }
 
         static ObservableCollection<string> interfaceChoose(CaptureDeviceList devices)
