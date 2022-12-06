@@ -76,3 +76,7 @@ C:\Users\Client\Desktop\5A SIRAV\Projet 5A\5AProjetSniffer\SnifferIHM\obj\Debug\
 C:\Users\Client\Desktop\5A SIRAV\Projet 5A\5AProjetSniffer\SnifferIHM\obj\Debug\netcoreapp3.1\SnifferIHM.genruntimeconfig.cache
 >>>>>>> main
 C:\Users\Peepp\Source\Repos\5AProjetSniffer\SnifferIHM\obj\Debug\netcoreapp3.1\SnifferIHM.csproj.ResolveComReference.cache
+C:\Users\Peepp\Source\Repos\5AProjetSniffer\SnifferIHM\bin\Debug\netcoreapp3.1\PcapDotNet.Base.dll
+C:\Users\Peepp\Source\Repos\5AProjetSniffer\SnifferIHM\bin\Debug\netcoreapp3.1\PcapDotNet.Core.Extensions.dll
+C:\Users\Peepp\Source\Repos\5AProjetSniffer\SnifferIHM\bin\Debug\netcoreapp3.1\PcapDotNet.Core.dll
+C:\Users\Peepp\Source\Repos\5AProjetSniffer\SnifferIHM\bin\Debug\netcoreapp3.1\PcapDotNet.Packets.dll
