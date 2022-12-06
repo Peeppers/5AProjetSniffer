@@ -26,6 +26,30 @@
         <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="74,68,0,0" VerticalAlignment="Top" Grid.Column="1" Height="20" Width="39"/>
         <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="140,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="28"/>
         <ListView Name="mainListView" ItemsSource="{Binding Packets}" Margin="20,128,16,0" SelectionChanged="listView_SelectChange" SelectionMode="Single" Height="261" VerticalAlignment="Top" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <ListView.Resources>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding protocol}" Value="TCP">
+                            <Setter Property="Background" Value="LightBlue"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding protocol}" Value="UDP">
+                            <Setter Property="Background" Value="LightCoral"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding protocol}" Value="ARP">
+                            <Setter Property="Background" Value="LightSlateGray"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding protocol}" Value="ICMPV4">
+                            <Setter Property="Background" Value="LightPink"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding protocol}" Value="ICMPV6">
+                            <Setter Property="Background" Value="LightSalmon"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding protocol}" Value="IGMP">
+                            <Setter Property="Background" Value="LightGray"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding id}" Width="40"/>

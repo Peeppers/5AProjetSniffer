@@ -154,12 +154,13 @@ namespace SnifferIHM
 
 
                     var packet = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
-                    packetList.Add(packetIndex, packet);
+                   
 
                     var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
 
                     if (ipPacket != null)
-                    {
+                    { 
+                        packetList.Add(packetIndex, packet);
                         srcIp = ipPacket.SourceAddress;
                         destIp = ipPacket.DestinationAddress;
                         protocol = ipPacket.Protocol;
@@ -172,7 +173,7 @@ namespace SnifferIHM
         }
         public void Ajouter(Trame trame)
         {
-            packetIndex++;
+            ++packetIndex;
             packets.Add(trame);
         }
 
