@@ -44,9 +44,9 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
-            "SharpPcap.Core": {
+            "SharpPcap": {
               "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[6.2.5, )"
             }
           },
           "imports": [
