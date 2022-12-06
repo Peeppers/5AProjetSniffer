@@ -120,7 +120,7 @@ namespace SnifferIHM
 
                     var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
 
-                    if(packet != null)
+                    if(ipPacket != null)
                     {
                         srcIp = ipPacket.SourceAddress;
                         destIp = ipPacket.DestinationAddress;
