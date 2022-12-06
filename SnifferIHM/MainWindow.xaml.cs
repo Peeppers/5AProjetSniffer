@@ -14,7 +14,7 @@ namespace SnifferIHM
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window         // Classe principale, communique avec le front XAML et le controlleur
     {
         private readonly MainViewModel vm;
         public MainWindow()
@@ -110,7 +110,7 @@ namespace SnifferIHM
                 return;
             }
             // Extract a device from the list
-            this.device = devices[choosenDevice];
+            device = devices[choosenDevice];                            
 
             // Register our handler function to the
             // 'packet arrival' event
