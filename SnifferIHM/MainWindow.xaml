@@ -37,8 +37,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <TextBox Name="textBoxInfo" Text="{Binding textBoxInfo}" HorizontalAlignment="Left" Margin="20,47,0,42" TextWrapping="Wrap" Width="357" Grid.Row="2"/>
-        <TextBox Name="textBoxData" Margin="14,47,16,42" TextWrapping="Wrap" Grid.Row="2" Grid.Column="1"/>
+        <TextBox Name="textBoxInfo" Text="{Binding textBoxInfo}" HorizontalAlignment="Left" Margin="24,47,0,42" TextWrapping="Wrap" Width="356" Grid.Row="2" Grid.Column="1"/>
+        <TextBox Name="textBoxData" Margin="20,47,4,42" TextWrapping="Wrap" Grid.Row="2"/>
         <Label Content="Info packet :" HorizontalAlignment="Left" Margin="20,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Height="26" Width="75"/>
         <Label Content="Données :" HorizontalAlignment="Left" Margin="35,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Grid.Column="1" Height="26" Width="63"/>
         <Button Name="restButton" Click="resetOnClick" Content="Effacer" HorizontalAlignment="Left" Margin="182,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="40"/>
