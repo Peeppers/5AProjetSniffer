@@ -5,18 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SnifferIHM"
         mc:Ignorable="d"
-        Title="MainWindow" Height="617" Width="813">
-    <Grid>
+        Title="MainWindow" Height="754" Width="791">
+    <Grid HorizontalAlignment="Left" Width="815">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="394*"/>
+            <ColumnDefinition Width="421*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="260*"/>
+            <RowDefinition Height="19*"/>
+            <RowDefinition Height="452*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
         <Label Content="Filtre :" HorizontalAlignment="Left" Margin="30,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
-        <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134"/>
+        <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134" Grid.ColumnSpan="2"/>
         <ComboBox Name="filterList" HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Width="120" />
-        <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" />
-        <ScrollViewer Margin="10,128,10,10">
-            <DataGrid Name="mainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-            </DataGrid>
-        </ScrollViewer>
+        <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" />
+        <!--<DataGrid Name="mainGrid" RenderTransformOrigin="0.5,0.51" Margin="30,117,0,117"/>-->
         <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
-        <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="468,68,0,0" VerticalAlignment="Top"/>
-        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="534,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804"/>
+        <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="74,68,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="140,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1"/>
+        <ListView Name="mainListView" Margin="20,128,0,0" SelectionChanged="listView_SelectChange" SelectionMode="Single" Height="261" VerticalAlignment="Top" HorizontalAlignment="Left" Width="747" Grid.RowSpan="3" Grid.ColumnSpan="2">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding id}" Width="40"/>
+                    <GridViewColumn Header="Temps" DisplayMemberBinding="{Binding time}" Width="150"/>
+                    <GridViewColumn Header="Adresse source" DisplayMemberBinding="{Binding sourceIP}" Width="150"/>
+                    <GridViewColumn Header="Adresse dest." DisplayMemberBinding="{Binding destinationIP}" Width="150"/>
+                    <GridViewColumn Header="Protocole" DisplayMemberBinding="{Binding protocol}" Width="100"/>
+                    <GridViewColumn Header="Taille" DisplayMemberBinding="{Binding lenght}" Width="150"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBox Name="textBoxInfo"   HorizontalAlignment="Left" Margin="20,153,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="257" Width="325" Grid.Row="2"/>
+        <TextBox x:Name="textBoxData"   HorizontalAlignment="Left" Margin="31,153,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="257" Width="346" Grid.Row="2" Grid.Column="1"/>
+        <Label Content="Info packet :" HorizontalAlignment="Left" Margin="20,127,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2"/>
+        <Label Content="Données :" HorizontalAlignment="Left" Margin="50,127,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Grid.Column="1"/>
     </Grid>
 </Window>

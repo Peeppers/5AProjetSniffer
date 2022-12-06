@@ -4,6 +4,11 @@ using System.Windows;
 using SharpPcap;
 using PacketDotNet;
 using System.Collections.ObjectModel;
+using static SnifferIHM.MainWindow;
+using System.Windows.Media;
+using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SnifferIHM
 {
@@ -14,6 +19,7 @@ namespace SnifferIHM
     {
         private static int packetIndex = 0;
         ObservableCollection<Trame> packets = new ObservableCollection<Trame>();
+        Dictionary<int, Packet> packetList = new Dictionary<int, Packet>();
         CaptureDeviceList devices = CaptureDeviceList.Instance;
         ICaptureDevice device { get; set; }
         public bool keepAlive { get; set; }
@@ -24,39 +30,8 @@ namespace SnifferIHM
             device = null;
             keepAlive= true;
             CaptureDeviceList devices = CaptureDeviceList.Instance;
-            ListOfItems.Add("");
-            ListOfItems.Add("TCP");
-            ListOfItems.Add("UDP");
             interfaceList.ItemsSource = interfaceChoose(devices);
-            filterList.ItemsSource = ListOfItems;
-            filterList.SelectedIndex = 0;
             //Sniffer(mainGrid);
-        }
-
-        public class Trame
-        {
-            public Trame(int id, System.Net.IPAddress srcIp, int srcPort, System.Net.IPAddress destIp, int destPort, IPProtocolType protocol, int lenght, DateTime time, PacketDotNet.Packet data)
-            {
-                this.id = id;
-                this.sourceIP= srcIp;
-                this.sourcePort = srcPort;
-                this.destinationIP= destIp;
-                this.destinationPort = destPort;
-                this.lenght = lenght;
-                this.time = time;
-                this.data = data;
-                this.protocol= protocol;
-            }
-
-            public int id { get; set; }
-            public int lenght { get; set; }
-            public DateTime time { get; set; }
-            public System.Net.IPAddress sourceIP { get; set; }
-            public System.Net.IPAddress destinationIP { get; set; }
-            public IPProtocolType protocol { get; set; }
-            public int sourcePort { get; set; }
-            public int destinationPort { get; set; }
-            public PacketDotNet.Packet data { get; set; }
         }
 
         static List<string> interfaceChoose(CaptureDeviceList devices)
@@ -106,11 +81,11 @@ namespace SnifferIHM
             int readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
+            //device.Filter = "tcp";//(string)filterList.SelectedItem;
+
             // Start the capturing process
             device.StartCapture();
             
-                
-
             //// Wait for 'Enter' from the user.
             //Console.ReadLine();
 
@@ -131,50 +106,163 @@ namespace SnifferIHM
             {
                 this.Dispatcher.Invoke(new Action(() =>
                 {
-                    var time = e.Packet.Timeval.Date;
+                    DateTime time = e.Packet.Timeval.Date;
+                    string time_str = (time.Hour + 1) + ":" + time.Minute + ":" + time.Millisecond;
                     var len = e.Packet.Data.Length;
                     var rawPacket = e.Packet;
+                    System.Net.IPAddress srcIp;
+                    System.Net.IPAddress destIp;
+                    IPProtocolType protocol;
+
 
                     var packet = Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data);
+                    packetList.Add(packetIndex, packet);
 
-                    var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
-                    var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
+                    var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
 
-                    if (tcpPacket != null)
+                    if(packet != null)
                     {
-                        var ipPacket = (PacketDotNet.IpPacket)tcpPacket.ParentPacket;
-                        System.Net.IPAddress srcIp = ipPacket.SourceAddress;
-                        System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
-                        int srcPort = tcpPacket.SourcePort;
-                        int dstPort = tcpPacket.DestinationPort;
-                        IPProtocolType protocol = ipPacket.Protocol;
-                        packetIndex++;
+                        srcIp = ipPacket.SourceAddress;
+                        destIp = ipPacket.DestinationAddress;
+                        protocol = ipPacket.Protocol;
 
-                        Trame trame = new Trame(packetIndex, srcIp, srcPort, dstIp, dstPort, protocol, len, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
-
-                        if ((string)filterList.SelectedItem !="UDP") packets.Add(trame);
-                        mainGrid.ItemsSource = packets;
+                        Trame trame = new Trame(packetIndex, time_str, srcIp, destIp, protocol, len);
+                        packets.Add(trame);
+                        mainListView.ItemsSource = packets;
+                        ++packetIndex;
                     }
-                    if (udpPacket != null) 
-                    {
-                        var ipPacket = (PacketDotNet.IpPacket)udpPacket.ParentPacket;
-                        System.Net.IPAddress srcIp = ipPacket.SourceAddress;
-                        System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
-                        int srcPort = udpPacket.SourcePort;
-                        int dstPort = udpPacket.DestinationPort;
-                        IPProtocolType protocol = ipPacket.Protocol;
-                        packetIndex++;
-
-                        Trame trame = new Trame(packetIndex, srcIp, srcPort, dstIp, dstPort, protocol, len, rawPacket.Timeval.Date, Packet.ParsePacket(rawPacket.LinkLayerType, rawPacket.Data));
-
-                        if ((string)filterList.SelectedItem != "TCP") packets.Add(trame);
-                        mainGrid.ItemsSource = packets;
-                    }
-                   
                 }));
             }
-           
+        }
 
-        }      
+        private void listView_SelectChange(object sender, SelectionChangedEventArgs e)
+        {
+            Packet packet = packetList[mainListView.SelectedIndex];
+
+            var ipPacket = (IpPacket)packet.Extract(typeof(IpPacket));
+
+            Trace.WriteLine(ipPacket.Protocol.ToString());
+
+            switch (ipPacket.Protocol.ToString())
+            {
+                case "TCP":
+                    var tcpPacket = (TcpPacket)packet.Extract(typeof(TcpPacket));
+                    if(tcpPacket != null)
+                    {
+                        int srcPort = tcpPacket.SourcePort;
+                        int destPort = tcpPacket.DestinationPort;
+                        var checksum = tcpPacket.Checksum;
+
+                        textBoxInfo.Text = "";
+                        textBoxInfo.Text = "Packet n° " + mainListView.SelectedIndex +
+                            " Type: TCP" + "\nPort Source: " + srcPort +
+                            " \nPort dest : " + destPort +
+                            "\n Tcp entete taille : " + tcpPacket.DataOffset +
+                            "\r\nWindow size : " + tcpPacket.WindowSize + 
+                            "\r\nChecksum : " + checksum.ToString() + (tcpPacket.ValidChecksum ? ",valid" : ",invalid") +
+                            "\r\nTCP checksum : " + (tcpPacket.ValidTCPChecksum ? ",valid" : ",invalid") +
+                            "\r\nSequence number : " + tcpPacket.SequenceNumber.ToString() +
+                            "\r\nAcknowledgment number : " + tcpPacket.AcknowledgmentNumber + (tcpPacket.Ack ? ",valid" : ",invalid") +
+                            "\r\nUrgent pointer : " + (tcpPacket.Urg ? "valid" : "invalid") +
+                            "\r\nACK flag : " + (tcpPacket.Ack ? "1" : "0") + 
+                            "\r\nPSH flag : " + (tcpPacket.Psh ? "1" : "0") + 
+                            "\r\nRST flag : " + (tcpPacket.Rst ? "1" : "0") + 
+                            "\r\nSYN flag : " + (tcpPacket.Syn ? "1" : "0") +
+                            "\r\nFIN flag : " + (tcpPacket.Fin ? "1" : "0") +
+                            "\r\nECN flag : " + (tcpPacket.ECN ? "1" : "0") +
+                            "\r\nCWR flag : " + (tcpPacket.CWR ? "1" : "0") +
+                            "\r\nNS flag : " + (tcpPacket.NS ? "1" : "0");
+                        textBoxData.Text = "";
+                        textBoxData.Text = tcpPacket.PayloadData.ToString();
+                    }
+                    break;
+
+                case "UDP":
+                    var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
+                    if(udpPacket != null)
+                    {
+                        int srcPort = udpPacket.SourcePort;
+                        int destPort = udpPacket.DestinationPort;
+                        var checksum = udpPacket.Checksum;
+
+                        textBoxInfo.Text = "";
+                        textBoxInfo.Text = "Packet number: " + mainListView.SelectedIndex +
+                                        " Type: UDP" +
+                                        "\r\nSource port:" + srcPort +
+                                        "\r\nDestination port: " + destPort +
+                                        "\r\nChecksum:" + checksum.ToString() + " valid: " + udpPacket.ValidChecksum +
+                                        "\r\nValid UDP checksum: " + udpPacket.ValidUDPChecksum;
+                        textBoxData.Text = "";
+                    }
+                    break;
+
+                case "ARP":
+                    var arpPacket = (ARPPacket)packet.Extract(typeof(ARPPacket));
+                    if(arpPacket != null)
+                    {
+                        System.Net.IPAddress senderAddress = arpPacket.SenderProtocolAddress;
+                        System.Net.IPAddress targerAddress = arpPacket.TargetProtocolAddress;
+                        System.Net.NetworkInformation.PhysicalAddress senderHardwareAddress = arpPacket.SenderHardwareAddress;
+                        System.Net.NetworkInformation.PhysicalAddress targerHardwareAddress = arpPacket.TargetHardwareAddress;
+
+                        textBoxInfo.Text = "";
+                        textBoxInfo.Text = "Packet number: " + mainListView.SelectedIndex +
+                        " Type: ARP" +
+                        "\r\nHardware address length:" + arpPacket.HardwareAddressLength +
+                        "\r\nProtocol address length: " + arpPacket.ProtocolAddressLength +
+                        "\r\nOperation: " + arpPacket.Operation.ToString() + // ARP request or ARP reply ARP_OP_REQ_CODE, ARP_OP_REP_CODE
+                        "\r\nSender protocol address: " + senderAddress +
+                        "\r\nTarget protocol address: " + targerAddress +
+                        "\r\nSender hardware address: " + senderHardwareAddress +
+                        "\r\nTarget hardware address: " + targerHardwareAddress;
+                    }
+                    break;
+
+                case "ICMPV4":
+                    var icmpv4Packet = (ICMPv4Packet)packet.Extract(typeof(ICMPv4Packet));
+
+                    if (icmpv4Packet != null)
+                    {
+                        textBoxInfo.Text = "";
+                        textBoxInfo.Text = "Packet number: " + mainListView.SelectedIndex +
+                        " Type: ICMP v4" +
+                        "\r\nType Code: 0x" + icmpv4Packet.TypeCode.ToString("x") +
+                        "\r\nChecksum: " + icmpv4Packet.Checksum.ToString("x") +
+                        "\r\nID: 0x" + icmpv4Packet.ID.ToString("x") +
+                        "\r\nSequence number: " + icmpv4Packet.Sequence.ToString("x");
+                    
+                    }
+                   
+                    break;
+                case "ICMPV6":
+                    var icmpv6Packet = (ICMPv6Packet)packet.Extract(typeof(ICMPv6Packet));
+
+                    textBoxInfo.Text = "";
+                    textBoxInfo.Text = "Packet number: " + mainListView.SelectedIndex +
+                                    " Type: ICMP v6" +
+                                    "\r\nChecksum: " + icmpv6Packet.Checksum.ToString("x");
+                
+                    break;
+
+                case "IGMP":
+                        var igmpPacket = (IGMPv2Packet)packet.Extract(typeof(IGMPv2Packet));
+
+                        if (igmpPacket != null)
+                        {
+                        textBoxInfo.Text = "";
+                        textBoxInfo.Text = "Packet number: " + mainListView.SelectedIndex +
+                                            " Type: IGMP v2" +
+                                            "\r\nType: " + igmpPacket.Type +
+                                            "\r\nGroup address: " + igmpPacket.GroupAddress +
+                                            "\r\nMax response time" + igmpPacket.MaxResponseTime;
+                        }
+                    
+                    break;
+
+                default:
+                    textBoxInfo.Text = "";
+                    break;
+            }
+        }
     }
 }
