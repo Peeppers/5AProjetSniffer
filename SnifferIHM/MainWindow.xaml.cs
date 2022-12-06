@@ -172,7 +172,7 @@ namespace SnifferIHM
         }
         public void Ajouter(Trame trame)
         {
-            packetIndex++;
+            ++packetIndex;
             packets.Add(trame);
         }
 
