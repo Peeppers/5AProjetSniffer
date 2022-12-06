@@ -27,7 +27,7 @@ namespace SnifferIHM
         private void startOnClick(object sender, RoutedEventArgs e)
         {
             vm.keepAlive = true;
-            vm.Sniffer(interfaceList.SelectedIndex, filterList.Text);   // on sniff avec en parametre l'interface et filtre selectionné
+            vm.Sniffer(interfaceList.SelectedIndex, filterTextBox.Text);   // on sniff avec en parametre l'interface et filtre selectionné
         }
         private void stopOnClick(object sender, RoutedEventArgs e)
         {
@@ -68,7 +68,6 @@ namespace SnifferIHM
         public Dictionary<int, Packet> packetList;
 
         public ObservableCollection<Trame> packets;
-
         ICaptureDevice device { get; set; }
         public bool keepAlive { get; set; }
         public ObservableCollection<Trame> Packets // Variable accessible lie à la liste de paquets dans le xaml 
@@ -124,7 +123,10 @@ namespace SnifferIHM
             int readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
-            device.Filter = filter;
+            if(filter != "")
+            {
+                device.Filter = filter;
+            }
 
             // Start the capturing process
             device.StartCapture();
@@ -306,5 +308,4 @@ namespace SnifferIHM
         }
 
     }
-
 }
