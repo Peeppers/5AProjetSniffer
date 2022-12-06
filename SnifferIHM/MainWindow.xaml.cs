@@ -56,6 +56,13 @@ namespace SnifferIHM
             this.keepAlive= false;
         }
 
+        private void resetOnClick(object sender, RoutedEventArgs e)
+        {
+            packets.Clear();
+            packetList.Clear();
+        }
+
+
         private void Sniffer(int choosenDevice)
         {
             if(devices.Count < 1)

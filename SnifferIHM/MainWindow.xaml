@@ -9,23 +9,24 @@
     <Grid HorizontalAlignment="Left" Width="815">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="394*"/>
-            <ColumnDefinition Width="421*"/>
+            <ColumnDefinition Width="399*"/>
+            <ColumnDefinition Width="22*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="260*"/>
-            <RowDefinition Height="19*"/>
-            <RowDefinition Height="452*"/>
+            <RowDefinition Height="129*"/>
+            <RowDefinition Height="342*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Label Content="Filtre :" HorizontalAlignment="Left" Margin="30,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
+        <Label Content="Filtre :" HorizontalAlignment="Left" Margin="30,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="26" Width="42"/>
         <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134" Grid.ColumnSpan="2"/>
-        <ComboBox Name="filterList" HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Width="120" />
-        <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" />
+        <ComboBox Name="filterList" HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Width="120" Height="22" />
+        <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="22" />
         <!--<DataGrid Name="mainGrid" RenderTransformOrigin="0.5,0.51" Margin="30,117,0,117"/>-->
-        <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
-        <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="74,68,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="140,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1"/>
-        <ListView Name="mainListView" Margin="20,128,0,0" SelectionChanged="listView_SelectChange" SelectionMode="Single" Height="261" VerticalAlignment="Top" HorizontalAlignment="Left" Width="747" Grid.RowSpan="3" Grid.ColumnSpan="2">
+        <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="26" Width="62"/>
+        <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="74,68,0,0" VerticalAlignment="Top" Grid.Column="1" Height="20" Width="39"/>
+        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="140,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="28"/>
+        <ListView Name="mainListView" Margin="20,128,16,0" SelectionChanged="listView_SelectChange" SelectionMode="Single" Height="261" VerticalAlignment="Top" Grid.RowSpan="2" Grid.ColumnSpan="2">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding id}" Width="40"/>
@@ -37,9 +38,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <TextBox Name="textBoxInfo"   HorizontalAlignment="Left" Margin="20,153,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="257" Width="325" Grid.Row="2"/>
-        <TextBox x:Name="textBoxData"   HorizontalAlignment="Left" Margin="31,153,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="257" Width="346" Grid.Row="2" Grid.Column="1"/>
-        <Label Content="Info packet :" HorizontalAlignment="Left" Margin="20,127,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2"/>
-        <Label Content="Données :" HorizontalAlignment="Left" Margin="50,127,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Grid.Column="1"/>
+        <TextBox Name="textBoxInfo"   HorizontalAlignment="Left" Margin="20,47,0,42" TextWrapping="Wrap" Width="357" Grid.Row="2"/>
+        <TextBox Name="textBoxData" Margin="14,47,16,42" TextWrapping="Wrap" Grid.Row="2" Grid.Column="1"/>
+        <Label Content="Info packet :" HorizontalAlignment="Left" Margin="20,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Height="26" Width="75"/>
+        <Label Content="Données :" HorizontalAlignment="Left" Margin="35,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Grid.Column="1" Height="26" Width="63"/>
+        <Button Name="restButton" Click="resetOnClick" Content="Effacer" HorizontalAlignment="Left" Margin="182,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="40"/>
     </Grid>
 </Window>
