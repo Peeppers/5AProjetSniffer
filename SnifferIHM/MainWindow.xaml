@@ -9,10 +9,10 @@
     <Grid>
         <Label Content="Filtre :" HorizontalAlignment="Left" Margin="30,68,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
         <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134"/>
-        <ComboBox Name="filterList" HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Width="120" />
-        <ComboBox Name="interfaceList" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBox Name="filterList"  HorizontalAlignment="Left" Margin="85,70,0,0" VerticalAlignment="Top" Width="120" />
+        <ComboBox Name="interfaceList" ItemsSource="{Binding interfaces}" HorizontalAlignment="Left" Margin="305,70,0,0" VerticalAlignment="Top" Width="120" />
         <ScrollViewer Margin="10,128,10,10">
-            <DataGrid Name="mainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <DataGrid Name="mainGrid" HorizontalAlignment="Stretch" ItemsSource="{Binding Packets}" >
             </DataGrid>
         </ScrollViewer>
         <Label Content="Interface :" HorizontalAlignment="Left" Margin="237,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194"/>
