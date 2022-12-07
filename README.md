@@ -9,6 +9,10 @@ Afin de lancer le projet vous dezv :
 Le projet peut maintenant être lancé.
 
 ## Sniffer ##
+
+### présentation ###
+Nous avons choisis de faire une applications C# pour le partie logique et wpf pour la partie IHM. Le fichier MainWondows.xaml Contient le code xaml de l'IHM tandiq que le fichier MainWindows.xaml.cs contiens la partie logique.  
+
 ### Filtres ###
 la syntaxe de filtrages de paquets est tirée de la syntaxe de la librairie Winpcap.
 
