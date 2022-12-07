@@ -44,5 +44,7 @@ on peut également filtrer des adresses spétiales comme brodcat ou multicast:
 * **ip brodcast**
 * **ip multicast**
 
+plus d'informations: https://www.winpcap.org/docs/docs_40_2/html/group__language.html
+
 
 
