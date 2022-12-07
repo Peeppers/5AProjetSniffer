@@ -9,7 +9,19 @@ Afin de lancer le projet vous dezv :
 Le projet peut maintenant être lancé.
 
 ## Sniffer ##
-### Filtres###
+### Filtres ###
+la syntaxe de filtrages de paquets est tirée de la syntaxe de la librairie Winpcap.
 
+#### Protocoles ####
+* *tcp*
+* *udp*
+* *icmp*
+* *arp*
+
+#### hotes ####
+
+* *host _addresse_de_l'hote_*
+* *host _nom_de_l'hote_*
+* *dst _hote_* 
 
 
