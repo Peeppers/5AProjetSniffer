@@ -19,7 +19,7 @@
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
         <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134" Grid.ColumnSpan="2"/>
-        <ComboBox Name="interfaceList" HorizontalAlignment="Left" ItemsSource="{Binding interfaces}" Margin="270,63,0,0" VerticalAlignment="Top" Width="120" Height="22" />
+        <ComboBox Name="interfaceList" HorizontalAlignment="Left" ItemsSource="{Binding interfaces}" Margin="270,63,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
         <Label Content="Interface :" HorizontalAlignment="Left" Margin="202,59,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="26" Width="62"/>
         <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="39,61,0,0" VerticalAlignment="Top" Grid.Column="1" Height="20" Width="39"/>
         <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="105,61,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="28"/>
@@ -59,12 +59,12 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <TextBox Name="textBoxInfo" Text="{Binding textBoxInfo}" Margin="24,124,8,42" TextWrapping="Wrap" Grid.Row="2" Grid.Column="1"/>
-        <TextBox Name="textBoxData" Margin="20,124,4,42" TextWrapping="Wrap" Grid.Row="2"/>
+        <TextBox Name="textBoxData"  Margin="24,124,8,42" TextWrapping="Wrap" Grid.Row="2" Grid.Column="1"/>
+        <TextBox Name="textBoxInfo" Margin="20,124,4,42" TextWrapping="Wrap" Grid.Row="2"/>
         <Label Content="Info packet :" HorizontalAlignment="Left" Margin="20,98,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Height="26" Width="75"/>
         <Label Content="Données :" HorizontalAlignment="Left" Margin="24,98,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Grid.Row="2" Grid.Column="1" Height="26" Width="63"/>
         <Button Name="restButton" Click="resetOnClick" Content="Effacer" HorizontalAlignment="Left" Margin="147,61,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="40"/>
-        <TextBox Name="filterTextBox" Grid.ColumnSpan="3" Margin="68,105,14,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBox Name="filterTextBox" TextChanged="deviceFilter" Grid.ColumnSpan="3" Margin="68,105,14,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <Label Content="Filtre :" HorizontalAlignment="Left" Margin="20,101,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="26" Width="48"/>
     </Grid>
 </Window>

@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Automation.Provider;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace SnifferIHM
 {
@@ -27,22 +28,29 @@ namespace SnifferIHM
         private void startOnClick(object sender, RoutedEventArgs e)
         {
             vm.keepAlive = true;
+            vm.packetList.Clear();
+            vm.packets.Clear();
+            vm.packetIndex = 0;
             vm.Sniffer(interfaceList.SelectedIndex, filterTextBox.Text);   // on sniff avec en parametre l'interface et filtre selectionné
         }
         private void stopOnClick(object sender, RoutedEventArgs e)
         {
             vm.keepAlive = false;
-            //interfaceList.SelectedIndex = -1;
         }
 
         private void resetOnClick(object sender, RoutedEventArgs e)
         {
             vm.packetList.Clear();
             vm.packets.Clear();
-           vm.packetIndex = 0;
+            vm.packetIndex = 0;
         }
 
         public void insertTextBoxInfo(string data)
+        {
+            textBoxInfo.Text = data;
+        }
+
+        public void insertTextBoxData(string data)
         {
             textBoxData.Text = data;
         }
@@ -55,6 +63,23 @@ namespace SnifferIHM
         public void listView_SelectChange(object sender, SelectionChangedEventArgs e)
         {
             insertTextBoxInfo(vm.listViewSelectChange((sender as ListView).SelectedIndex));
+        }
+
+        public void deviceFilter(object sender, EventArgs e)
+        {
+            string regexfinal = "(tcp)|(udp)|(icmp)|(arp)|((((dst)|(src)| (host)) ([0-9]{1,2}.){3}.([0-9]{1,3}.)[0-9]))|((port) [1-6]{1,5})|(((src)|(dest)) (port) [1-6]{1,5})";
+            Regex re = new Regex(regexfinal);
+            TextBox filtre = sender as TextBox;
+            if (vm.device == null) return;
+            if (re.IsMatch(filtre.Text))
+            {
+                vm.keepAlive = true;
+;                Trace.WriteLine(interfaceList.SelectedIndex);
+                vm.Sniffer(interfaceList.SelectedIndex, filterTextBox.Text);
+                vm.device.Filter = filtre.Text;
+                Trace.WriteLine(vm.device.Filter);
+            }
+            else vm.device.Filter = "";
         }
     }
 
@@ -70,7 +95,7 @@ namespace SnifferIHM
         public Dictionary<int, Packet> packetList;
 
         public ObservableCollection<Trame> packets;
-        ICaptureDevice device { get; set; }
+        public ICaptureDevice device { get; set; }
         public bool keepAlive { get; set; }
         public ObservableCollection<Trame> Packets // Variable accessible lie à la liste de paquets dans le xaml 
         {
@@ -102,7 +127,6 @@ namespace SnifferIHM
         }
         public void Sniffer(int choosenDevice, string filter)
         {
-
             if (choosenDevice == -1)
             {
                 MessageBox.Show("Aucune interface choisi");
@@ -111,35 +135,18 @@ namespace SnifferIHM
             // Extract a device from the list
             device = devices[choosenDevice];                            
 
-            // Register our handler function to the
-            // 'packet arrival' event
-
-            device.OnPacketArrival +=
-                new PacketArrivalEventHandler(device_OnPacketArrival);
-
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
-            if(filter != "")
-            {
-                device.Filter = filter;
-            }
-
+            device.OnPacketArrival +=
+                new PacketArrivalEventHandler(device_OnPacketArrival);
             // Start the capturing process
             device.StartCapture();
-
-            //// Wait for 'Enter' from the user.
-            //Console.ReadLine();
-
-            //// Stop the capturing process
-            //device.StopCapture();
-
-            //// Close the pcap device
-            //device.Close();
         }
         public void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
+            Trace.WriteLine(device.ToString());
             if (keepAlive)
             {
                 dispatcher.Invoke(new Action(() =>
@@ -182,8 +189,6 @@ namespace SnifferIHM
         {
             if (index != -1)
             {
-
-
                 Packet packet = packetList[index];
                 string textBoxInfo = "";
 
@@ -311,6 +316,5 @@ namespace SnifferIHM
             }
             else return null;
         }
-
     }
 }
