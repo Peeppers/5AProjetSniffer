@@ -19,10 +19,10 @@
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
         <Label Content="Sniffer" HorizontalAlignment="Left" FontSize="40" Margin="358,-3,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="65" Width="134" Grid.ColumnSpan="2"/>
-        <ComboBox Name="interfaceList" HorizontalAlignment="Left" ItemsSource="{Binding interfaces}" Margin="270,63,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
-        <Label Content="Interface :" HorizontalAlignment="Left" Margin="202,59,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="26" Width="62"/>
+        <ComboBox Name="interfaceList" HorizontalAlignment="Left" ItemsSource="{Binding interfaces}" Margin="220,63,0,0" VerticalAlignment="Top" Width="120" Height="22"/>
+        <Label Content="Interface :" HorizontalAlignment="Left" Margin="150,59,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.381,-0.194" Height="26" Width="62"/>
         <Button Name="startButton" Click="startOnClick" Content="Lancer" HorizontalAlignment="Left" Margin="39,61,0,0" VerticalAlignment="Top" Grid.Column="1" Height="20" Width="39"/>
-        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="105,61,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="28"/>
+        <Button Name="stopButton" Click="stopOnClick" Content="Stop" HorizontalAlignment="Left" Margin="105,61,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.257,0.804" Grid.Column="1" Height="20" Width="28" IsEnabled="False"/>
         <ListView Name="mainListView" ItemsSource="{Binding Packets}" Margin="20,128,21,244" SelectionChanged="listView_SelectChange" SelectionMode="Single" Grid.RowSpan="3" Grid.ColumnSpan="3">
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}">

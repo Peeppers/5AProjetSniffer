@@ -1,5 +1,6 @@
 ﻿using PacketDotNet;
 using SharpPcap;
+using SharpPcap.LibPcap;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,11 +32,16 @@ namespace SnifferIHM
             vm.packetList.Clear();
             vm.packets.Clear();
             vm.packetIndex = 0;
-            vm.Sniffer(interfaceList.SelectedIndex, filterTextBox.Text);   // on sniff avec en parametre l'interface et filtre selectionné
+            startButton.IsEnabled = !vm.Sniffer(interfaceList.SelectedIndex, filterTextBox.Text);   // on sniff avec en parametre l'interface et filtre selectionné;
+            stopButton.IsEnabled = !startButton.IsEnabled;
+            interfaceList.IsEnabled = startButton.IsEnabled;
         }
         private void stopOnClick(object sender, RoutedEventArgs e)
         {
             vm.keepAlive = false;
+            startButton.IsEnabled = vm.stopSniffer(interfaceList.SelectedIndex);
+            stopButton.IsEnabled = !startButton.IsEnabled;
+            interfaceList.IsEnabled = startButton.IsEnabled;
         }
 
         private void resetOnClick(object sender, RoutedEventArgs e)
@@ -88,7 +94,7 @@ namespace SnifferIHM
         // On initialise toutes les variables dont le sniffeur aura besoin
         public int packetIndex;
         public Dispatcher dispatcher { get; set; }
-        CaptureDeviceList devices { get; set; }
+        LibPcapLiveDeviceList devices { get; set; }
         public ObservableCollection<string> interfaces { get; } // Variable lié à la liste des interfaces dans le xaml
         public ObservableCollection<string> ListOfItems { get; }  // Variable lié aux filtres dans le xaml
 
@@ -106,8 +112,8 @@ namespace SnifferIHM
         public MainViewModel(Dispatcher dispatcher)
         {
             packets = new ObservableCollection<Trame>();    // listes des paquets capturés
-            packetList = new Dictionary<int, Packet>();     
-            devices = CaptureDeviceList.Instance;           // listes des interfaces
+            packetList = new Dictionary<int, Packet>();
+            devices = LibPcapLiveDeviceList.Instance;           // listes des interfaces
             packetIndex = 0;                                // Index de chaque paquet pour la construction de la trame
             keepAlive = true;
             this.dispatcher = dispatcher;                   // thread principale de l'appli
@@ -115,22 +121,23 @@ namespace SnifferIHM
             interfaces = interfaceChoose(devices);          // Liste des interfaces a afficher 
         }
 
-        static ObservableCollection<string> interfaceChoose(CaptureDeviceList devices)
+        static ObservableCollection<string> interfaceChoose(LibPcapLiveDeviceList devices)
         {
             ObservableCollection<string> list = new ObservableCollection<string>();
             // Print out the available network devices
-            foreach (ICaptureDevice dev in devices)
+            foreach (var dev in devices)
             {
-                list.Add(dev.Description);
+                if (dev.Interface.FriendlyName != null) list.Add(dev.Interface.FriendlyName);
+                
             }
             return list;
         }
-        public void Sniffer(int choosenDevice, string filter)
+        public bool Sniffer(int choosenDevice, string filter)
         {
             if (choosenDevice == -1)
             {
                 MessageBox.Show("Aucune interface choisi");
-                return;
+                return false;
             }
             // Extract a device from the list
             device = devices[choosenDevice];                            
@@ -143,10 +150,25 @@ namespace SnifferIHM
                 new PacketArrivalEventHandler(device_OnPacketArrival);
             // Start the capturing process
             device.StartCapture();
+            return true;
+        }
+
+        public bool stopSniffer(int choosenDevice)
+        {
+            // Extract a device from the list
+            device = devices[choosenDevice];
+
+            if (device.Started)
+            {
+                device.StopCapture();
+                return true;
+            }
+            return false;
+
         }
         public void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            Trace.WriteLine(device.ToString());
+            // Trace.WriteLine(device.ToString());   affiche sur la console
             if (keepAlive)
             {
                 dispatcher.Invoke(new Action(() =>
